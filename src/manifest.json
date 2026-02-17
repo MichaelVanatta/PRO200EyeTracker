@@ -1,0 +1,10 @@
+{
+    "name" : "Accessible Web",
+    "description" : "Allows users to navigate the browser through eye tracking and voice recognition",
+    "version" : "0.1.0",
+    "manifest_version" : 3,
+    "action" : {
+        "default_popup" : "panel.html",
+        "default_icon" : "accessible_web_icon.png"
+    }
+}
