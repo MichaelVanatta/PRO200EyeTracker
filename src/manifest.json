@@ -1,44 +1,31 @@
 {
-    "name" : "Accessible Web",
-    "description" : "Allows users to navigate the browser through eye tracking and voice recognition",
-    "version" : "0.1.0",
-    "manifest_version" : 3,
-    "action" : {
-        "default_popup" : "panel.html",
-        "default_icon" : "accessible_web_icon.png"
-    },
-    "content_scripts" : [
-        {
-            "js" : ["content.js"],
-            "matches" : [
-                "<all_urls>"
-            ]
-        }
-    ],
-    "content_security_policy": {
-        "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';"
-    },
-    "background" : {
-    },
-    "permissions": [ "offscreen"
-    ],
-    "host_permissions": [
-        "<all_urls>"
-    ],
-	"web_accessible_resources": [
-        {
-        "resources": [
-            "model.tar.gz",
-            "Vosklet.wasm",
-            "sandbox.html",
-            "voicerecognition.js"
-        ],
-        "matches": [
-            "<all_urls>"
-        ]
-        }
-    ],
-    "sandbox": {
-        "pages": ["sandbox.html"]
+  "name": "Accessible Web",
+  "description": "Allows users to navigate the browser through eye tracking and voice recognition",
+  "version": "0.1.0",
+  "manifest_version": 3,
+  "action": {
+    "default_popup": "panel.html",
+    "default_icon": "accessible_web_icon.png"
+  },
+  "content_scripts": [
+    {
+      "js": ["content.js"],
+      "matches": ["<all_urls>"]
     }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';"
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "permissions": ["offscreen"],
+  "host_permissions": ["<all_urls>"],
+  "web_accessible_resources": [
+    {
+      "resources": [],
+      "matches": ["<all_urls>"]
+    }
+  ]
 }

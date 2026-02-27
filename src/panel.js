@@ -1,26 +1,28 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const buto = document.getElementById("buto");
-    buto.addEventListener("click", go);
-});
+  const buto = document.getElementById("buto");
+  buto.addEventListener("click", () => {
+    // chrome.runtime.sendMessage({ type: "startVR" });
+    const recognition = new window.webkitSpeechRecognition();
 
-let exists = undefined;
+    recognition.continuous = true;
+    recognition.lang = "en-US";
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
 
-async function go() {
-    if (!exists) {
-      await chrome.offscreen.createDocument({
-        url: chrome.runtime.getURL("offscreen.html"),
-        reasons: ["USER_MEDIA"],
-        justification: "Run speech recognition"
-      });
-    }
-    exists = await chrome.runtime.getContexts({
-      documentUrls: [chrome.runtime.getURL("offscreen.html")],
-      contextTypes: ['OFFSCREEN_DOCUMENT']
-    });
-}
+    recognition.onstart = () => {
+      console.log("it go");
+    };
 
-chrome.runtime.onMessage.addListener((msg) => {
-  if (msg.type === "voskResult") {
-    console.log("Speech result:", msg.text);
-  }
+    recognition.onresult = e => {
+      console.log("Transcript:", e.results[0][0].transcript);
+    };
+
+    recognition.onerror = (event) => {
+      console.error(event.error);
+    };
+
+    recognition.start();
+
+    console.log(recognition);
+  });
 });
