@@ -3,7 +3,6 @@ chrome.runtime.onMessage.addListener(async (msg) => {
     const recognition = new webkitSpeechRecognition();
 
     recognition.continuous = true;
-    recognition.lang = "en-US";
     recognition.interimResults = true;
     recognition.maxAlternatives = 1;
 
