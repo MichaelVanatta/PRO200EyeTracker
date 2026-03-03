@@ -1,6 +1,6 @@
 body {
-  width: 300px;
-  height: 400px;
+  width: 250px;
+  height: 300px;
   background-color: #1e1e1e;
   color: white;
   font-family: Arial, sans-serif;
@@ -11,6 +11,29 @@ h1{
     color:aquamarine;
     text-align: center;
 }
+p{
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+
+.toggle-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.toggle-row {
+  display: flex;
+  justify-content: space-between; /* pushes text left, switch right */
+  align-items: center;
+}
+
+.toggle-label {
+  font-weight: 600;        /* makes text more robust */
+  font-size: 14px;
+}
 
 /* Container */
 .switch {
@@ -19,6 +42,7 @@ h1{
   width: 50px;
   height: 26px;
 }
+
 
 /* Hide default checkbox */
 .switch input {
@@ -57,4 +81,31 @@ input:checked + .slider {
 
 input:checked + .slider::before {
   transform: translateX(24px);
+}
+
+#eyeSetting, #voiceSetting {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    align-items: center;
+    background-color: #28a745; /* Nice green */
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+#eyeSetting:hover, #voiceSetting:hover{
+    background-color: #218838; /* Darker green on hover */
+}
+
+#eyeSetting:active, #voiceSetting:active{
+    transform: scale(0.97);
+}
+
+#eyeSetting,
+#voiceSetting {
+  display: block;
+  margin: 12px auto 0 auto;  /* centers horizontally */
 }

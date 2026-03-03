@@ -12,15 +12,47 @@
 
 <body>
     <h1>Accessible Web</h1>
-    <p>Toggle Eyetracking</p>
-    <label class="switch">
-        <input type="checkbox" id="toggleSetting">
-        <span class="slider"></span>
-        <p>Toggle Voicetracking</p>
-        <label class="switch">
-        <input type="checkbox" id="toggleSetting">
-        <span class="slider"></span>
-    </label>
+    <div id="mainPage">
+        <div class="toggle-container">
+
+            <div class="toggle-row">
+                <span class="toggle-label">Toggle Eyetracking</span>
+
+                <label class="switch">
+                    <input type="checkbox" id="eyeToggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <button id="eyeSetting">Eye Tracking Settings</button>
+
+        </div>
+        <div class="toggle-container">
+            <div class="toggle-row">
+                <span class="toggle-label">Toggle Voicetracking</span>
+                <label class="switch">
+                    <input type="checkbox" id="voiceToggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <button id="voiceSetting">Voice Tracker Settings</button>
+        </div>
+    </div>
+    <!-- EYE SETTINGS PAGE -->
+    <div id="eyePage" style="display: none;">
+        <button class="backBtn">← Back</button>
+        <h2>Eye Tracking Settings</h2>
+        <p>Put sliders / options here</p>
+    </div>
+
+
+    <!-- VOICE SETTINGS PAGE -->
+    <div id="voicePage" style="display: none;">
+        <button class="backBtn">← Back</button>
+        <h2>Voice Tracking Settings</h2>
+        <p>Put options here</p>
+    </div>
+    <script src="panel.js"></script>
 </body>
 
 </html>
