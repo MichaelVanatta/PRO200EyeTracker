@@ -9,5 +9,5 @@ function startSpeechRecognition() {
   startCommandListener();
 }
 
-chrome.runtime.sendMessage({ type: "startSR" });
+// chrome.runtime.sendMessage({ type: "startSR" });
 startSpeechRecognition();
