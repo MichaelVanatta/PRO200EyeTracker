@@ -2,6 +2,7 @@
     "name" : "Accessible Web",
     "description" : "Allows users to navigate the browser through eye tracking and voice recognition",
     "version" : "0.1.0",
+    "permissions": ["tabs"],
     "manifest_version" : 3,
     "action" : {
         "default_popup" : "panel.html",
