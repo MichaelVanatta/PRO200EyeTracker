@@ -21,7 +21,7 @@
     "service_worker": "background.js",
     "type": "module"
   },
-  "permissions": ["offscreen"],
+  "permissions": ["offscreen", "tabs"],
   "host_permissions": ["<all_urls>"],
   "web_accessible_resources": [
     {

@@ -1,0 +1,111 @@
+body {
+  width: 250px;
+  height: 300px;
+  background-color: #1e1e1e;
+  color: white;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 16px;
+}
+h1{
+    color:aquamarine;
+    text-align: center;
+}
+p{
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+
+.toggle-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.toggle-row {
+  display: flex;
+  justify-content: space-between; /* pushes text left, switch right */
+  align-items: center;
+}
+
+.toggle-label {
+  font-weight: 600;        /* makes text more robust */
+  font-size: 14px;
+}
+
+/* Container */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 26px;
+}
+
+
+/* Hide default checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* Slider background */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background-color: #ccc;
+  transition: 0.3s;
+  border-radius: 34px;
+}
+
+/* Circle */
+.slider::before {
+  content: "";
+  position: absolute;
+  height: 20px;
+  width: 20px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.3s;
+  border-radius: 50%;
+}
+
+/* When checked */
+input:checked + .slider {
+  background-color: #4CAF50;
+}
+
+input:checked + .slider::before {
+  transform: translateX(24px);
+}
+
+#eyeSetting, #voiceSetting {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    align-items: center;
+    background-color: #28a745; /* Nice green */
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+#eyeSetting:hover, #voiceSetting:hover{
+    background-color: #218838; /* Darker green on hover */
+}
+
+#eyeSetting:active, #voiceSetting:active{
+    transform: scale(0.97);
+}
+
+#eyeSetting,
+#voiceSetting {
+  display: block;
+  margin: 12px auto 0 auto;  /* centers horizontally */
+}
