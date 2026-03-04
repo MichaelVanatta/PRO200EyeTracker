@@ -1,3 +1,5 @@
 .vscode/
 .env
 model.tar.gz
+*/model.tar.gz
+test

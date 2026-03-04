@@ -1,3 +1,5 @@
+import { startCommandListener } from "./commandlistener.js";
+
 document.addEventListener("DOMContentLoaded", () => {
 
   const mainPage = document.getElementById("mainPage");
@@ -21,5 +23,11 @@ document.addEventListener("DOMContentLoaded", () => {
       mainPage.style.display = "block";
     });
   });
-
 });
+
+function startSpeechRecognition() {
+  startCommandListener();
+}
+
+// chrome.runtime.sendMessage({ type: "startSR" });
+startSpeechRecognition();
