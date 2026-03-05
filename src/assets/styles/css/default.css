@@ -83,7 +83,7 @@ input:checked + .slider::before {
   transform: translateX(24px);
 }
 
-#eyeSetting, #voiceSetting {
+#eyeSetting, #voiceSetting, #installer {
     padding: 10px 20px;
     border: none;
     border-radius: 25px;

@@ -58,6 +58,7 @@ function initialize() { // Acts as settings for right now
   recognition.interimResults = true;
   recognition.maxAlternatives = 1;
   recognition.processLocally = true;
+  recognition.lang = "en-US";
 
   console.log(recognition);
 
