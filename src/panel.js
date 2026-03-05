@@ -16,6 +16,13 @@ document.addEventListener("DOMContentLoaded", () => {
     voicePage.style.display = "block";
   });
 
+  document.getElementById("installer").addEventListener("click", ()=>{
+      window.webkitSpeechRecognition.install({
+      langs: ["en-US"],
+      processLocally: true
+    });
+  });
+
   document.querySelectorAll(".backBtn").forEach(btn => {
     btn.addEventListener("click", () => {
       eyePage.style.display = "none";
@@ -23,6 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
       mainPage.style.display = "block";
     });
   });
+  
 });
 
 function startSpeechRecognition() {

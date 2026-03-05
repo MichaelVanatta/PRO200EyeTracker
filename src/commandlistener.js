@@ -10,7 +10,6 @@ import { startDictationRecognizer } from './dictationrecognizer.js';
 // const phrases = phraseData.map(
 //   (p) => new window.webkitSpeechRecognitionPhrase(p.phrase, p.boost),
 // );
-
 let recognition = new window.webkitSpeechRecognition();
 
 const commands = [
@@ -52,6 +51,7 @@ function initialize() { // Acts as settings for right now
   recognition.interimResults = true;
   recognition.maxAlternatives = 1;
   recognition.processLocally = true;
+  recognition.lang = "en-US";
 
   console.log(recognition);
 
@@ -86,7 +86,7 @@ export function startCommandListener() {
 
   recognition.onerror = (error) => {
     console.error(error.error);
-    startCommandListener();
+    //startCommandListener();
   };
 
   recognition.start();
