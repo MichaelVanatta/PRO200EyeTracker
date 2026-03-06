@@ -105,7 +105,11 @@ input:checked + .slider::before {
 }
 
 #eyeSetting,
-#voiceSetting {
+#voiceSetting, #installer {
   display: block;
   margin: 12px auto 0 auto;  /* centers horizontally */
+}
+
+#mainPage {
+  display: none;
 }
