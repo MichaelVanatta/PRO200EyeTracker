@@ -117,6 +117,7 @@ function calcAccuracy() {
     
         sleep(5000).then(() => {
                 webgazer.params.storingPoints = false; // stop storing the prediction points
+                console.log("Stopped storing points");
                 // var past50 = webgazer.getStoredPoints(); // retrieve the stored points
                 // var precision_measurement = calculatePrecision(past50);
                 // var accuracyLabel = "<a>Accuracy | "+precision_measurement+"%</a>";
