@@ -17,7 +17,8 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   document.getElementById("installer").addEventListener("click", ()=>{
-      window.webkitSpeechRecognition.install({
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      SpeechRecognition.install({
       langs: ["en-US"],
       processLocally: true
     });
