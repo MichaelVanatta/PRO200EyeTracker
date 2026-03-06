@@ -8,11 +8,11 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     console.log(active);
 
     if ( active && (active.tagName === "TEXTAREA"||(active.tagName === "INPUT" && active.type === "text")) ) {
-        const start = active.selectionStart;
-        const end = active.selectionEnd;
-        const value = active.value;
+      const start = active.selectionStart;
+      const end = active.selectionEnd;
+      const value = active.value;
 
-        active.value = value.slice(0, start) + msg.data + value.slice(end);
-        }
+      active.value = value.slice(0, start) + msg.data + value.slice(end);
     }
+  }
 });

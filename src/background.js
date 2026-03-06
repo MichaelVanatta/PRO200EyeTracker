@@ -42,3 +42,11 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     });
   }
 });
+
+chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+  if (msg.type === "dictationFinished") {
+    chrome.runtime.sendMessage({
+      type: "dictationFinished"
+    });
+  }
+});

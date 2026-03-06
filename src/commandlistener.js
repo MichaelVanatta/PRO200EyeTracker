@@ -11,7 +11,8 @@ import { startDictationRecognizer } from './dictationrecognizer.js';
 //   (p) => new window.webkitSpeechRecognitionPhrase(p.phrase, p.boost),
 // );
 
-let recognition = new window.webkitSpeechRecognition();
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+let recognition = new SpeechRecognition();
 
 const commands = [
   "type",
@@ -25,7 +26,7 @@ const commands = [
   "restart",
 ];
 
-function runCommand(command) {
+async function runCommand(command) {
  switch(command) {
   case "click":
   case "clique":
@@ -34,7 +35,12 @@ function runCommand(command) {
   case "dictate":
   case "write":
   case "right":
-    startDictationRecognizer();
+  startDictationRecognizer();
+    // while(!commandHasRun) {
+    //   await new Promise(r => setTimeout(r, 5000));
+    //   console.log("failed", commandHasRun);
+    // }
+    //startCommandListener();
     break;
   case "reset":
   case "restart":
@@ -46,48 +52,63 @@ function runCommand(command) {
 }
 
 function initialize() { // Acts as settings for right now
-  recognition = new window.webkitSpeechRecognition();
+  recognition = new SpeechRecognition();
 
   recognition.continuous = true;
   recognition.interimResults = true;
   recognition.maxAlternatives = 1;
   recognition.processLocally = true;
+  recognition.lang = "en-US";
 
   console.log(recognition);
 
   recognition.onstart = () => {
     console.log("Starting command listener");
   };
-
 }
 
 export function startCommandListener() {
-  initialize();
-  
-  // recognition.phrases = phrases;
+    initialize();
 
-  recognition.onnomatch = () => {
-    console.log("This sucks");
-  };
+    // recognition.phrases = phrases;
 
-  recognition.onresult = (event) => {
-    let word = event.results[event.resultIndex][0].transcript.toLowerCase().trim();
+    recognition.onnomatch = () => {
+      console.log("This sucks");
+    };
 
-    if (commands.includes(word)) {
-      console.log(word, "this is a command");
-      recognition.stop();
-      runCommand(word);
-      //startCommandListener();
-    }
-    else {
-      console.log(word, "this is not a command");
-    }
-  };
+    recognition.onresult = (event) => {
+      let word = event.results[event.resultIndex][0].transcript.toLowerCase().trim();
 
-  recognition.onerror = (error) => {
-    console.error(error.error);
-    startCommandListener();
-  };
+      if (commands.includes(word)) {
+        recognition.stop();
+        console.log(word, "this is a command");
+        runCommand(word);
+      }
+      else {
+        console.log(word, "this is not a command");
+      }
+    };
 
-  recognition.start();
+    recognition.onerror = (error) => {
+      console.error(error.error);
+      if (error.error === "no-speech") {
+        startCommandListener();
+      }
+    };
+
+    recognition.start();
 }
+
+chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+  if (msg.type === "dictationFinished") {
+    setTimeout(() => {
+      startCommandListener();
+    }, 5000);
+  }
+});
+
+// check chrome://settings/content/microphone for the boys with the no-speech error
+
+navigator.mediaDevices.getUserMedia({ audio: true })
+  .then(stream => console.log("Mic working"))
+  .catch(err => console.error(err));

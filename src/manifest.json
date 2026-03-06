@@ -10,8 +10,7 @@
   "content_scripts": [
     {
       "js": ["content.js"],
-      "matches": ["<all_urls>"],
-      "type": "module"
+      "matches": ["<all_urls>"]
     }
   ],
   "content_security_policy": {
@@ -21,7 +20,7 @@
     "service_worker": "background.js",
     "type": "module"
   },
-  "permissions": ["offscreen", "tabs"],
+  "permissions": ["offscreen", "tabs", "activeTab", "scripting"],
   "host_permissions": ["<all_urls>"],
   "web_accessible_resources": [
     {
