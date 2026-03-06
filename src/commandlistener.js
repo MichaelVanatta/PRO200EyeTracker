@@ -24,6 +24,8 @@ const commands = [
   "select",
   "reset",
   "restart",
+  "stop",
+  "kill",
 ];
 
 async function runCommand(command) {
@@ -36,14 +38,13 @@ async function runCommand(command) {
   case "write":
   case "right":
   startDictationRecognizer();
-    // while(!commandHasRun) {
-    //   await new Promise(r => setTimeout(r, 5000));
-    //   console.log("failed", commandHasRun);
-    // }
-    //startCommandListener();
     break;
   case "reset":
   case "restart":
+    break;
+  case "stop":
+  case "kill":
+    recognition.stop();
     break;
   default:
     console.log("False alarm");
@@ -68,35 +69,35 @@ function initialize() { // Acts as settings for right now
 }
 
 export function startCommandListener() {
-    initialize();
+  initialize();
 
-    // recognition.phrases = phrases;
+  // recognition.phrases = phrases;
 
-    recognition.onnomatch = () => {
-      console.log("This sucks");
-    };
+  recognition.onnomatch = () => {
+    console.log("This sucks");
+  };
 
-    recognition.onresult = (event) => {
-      let word = event.results[event.resultIndex][0].transcript.toLowerCase().trim();
+  recognition.onresult = (event) => {
+    let word = event.results[event.resultIndex][0].transcript.toLowerCase().trim();
 
-      if (commands.includes(word)) {
-        recognition.stop();
-        console.log(word, "this is a command");
-        runCommand(word);
-      }
-      else {
-        console.log(word, "this is not a command");
-      }
-    };
+    if (commands.includes(word)) {
+      recognition.stop();
+      console.log(word, "this is a command");
+      runCommand(word);
+    }
+    else {
+      console.log(word, "this is not a command");
+    }
+  };
 
-    recognition.onerror = (error) => {
-      console.error(error.error);
-      if (error.error === "no-speech") {
-        startCommandListener();
-      }
-    };
+  recognition.onerror = (error) => {
+    console.error(error.error);
+    if (error.error === "no-speech") {
+      startCommandListener();
+    }
+  };
 
-    recognition.start();
+  recognition.start();
 }
 
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
