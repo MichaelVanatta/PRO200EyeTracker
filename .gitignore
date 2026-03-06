@@ -1,4 +1,4 @@
 .vscode/
 .env
-model.tar.gz
+test/
 node_modules
