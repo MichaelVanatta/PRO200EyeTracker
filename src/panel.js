@@ -3,6 +3,8 @@ import { startCommandListener } from "./commandlistener.js";
 document.addEventListener("DOMContentLoaded", () => {
 
   const mainPage = document.getElementById("mainPage");
+  const eyeToggle = document.getElementById("eyeToggle");
+  const voiceToggle = document.getElementById("voiceToggle");
   const eyePage = document.getElementById("eyePage");
   const voicePage = document.getElementById("voicePage");
   const installerButton = document.getElementById("installer");
@@ -30,20 +32,51 @@ document.addEventListener("DOMContentLoaded", () => {
 
       recognition.onerror = (event) => {
         if (event.error === "language-not-supported") {
-          ui.style.display = "none";
+          mainPage.style.display = "none";
           installerButton.style.display = "block";
         }
       };
 
       recognition.onstart = () => {
-        ui.style.display = "block";
+        mainPage.style.display = "block";
         installerButton.style.display = "none";
         recognition.stop();
       };
 
-      recognition.start();
+      startCommandListener();
     }
   });
+
+
+  eyeToggle.addEventListener("change", () => {
+
+    if (eyeToggle.checked) {
+      console.log("Eye tracking ON");
+      webgazer.begin();
+    } else {
+      console.log("Eye tracking OFF");
+      webgazer.pause();
+    }
+
+  });
+
+  voiceToggle.addEventListener("change", () => {
+
+    if (voiceToggle.checked) {
+      console.log("Voice recognition ON");
+      startCommandListener();
+    } else {
+      console.log("Voice recognition OFF");
+      recognition.stop();
+    }
+
+  });
+
+
+  if (voiceToggle.checked) {
+    startCommandListener();
+  }
+
 
 
   // If API doesn't exist, hide the installer entirely
@@ -51,38 +84,11 @@ document.addEventListener("DOMContentLoaded", () => {
     mainPage.style.display = "none";
     installPage.style.display = "block";
     return;
+  } else {
+    installPage.style.display = "none";
+    mainPage.style.display = "block";
   }
-
-  try {
-
-    const recognition = new SpeechRecognition();
-    recognition.lang = "en-US";
-    recognition.processLocally = true;
-
-    recognition.onstart = () => {
-      // model exists
-      installPage.style.display = "none";
-      mainPage.style.display = "block";
-      recognition.stop();
-    };
-
-    recognition.onerror = (event) => {
-
-      if (event.error === "language-not-supported") {
-        // model missing
-        mainPage.style.display = "none";
-        installPage.style.display = "block";
-      }
-
-    };
-
-    recognition.start();
-
-  } catch {
-    mainPage.style.display = "none";
-    installPage.style.display = "block";
-  }
-
+  startCommandListener();
 
   document.querySelectorAll(".backBtn").forEach(btn => {
     btn.addEventListener("click", () => {
@@ -92,19 +98,34 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+
+  installerButton.addEventListener("click", async () => {
+
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+      alert("Speech recognition not supported in this browser.");
+      return;
+    }
+
+    try {
+
+      await SpeechRecognition.install({
+        langs: ["en-US"],
+        processLocally: true
+      });
+
+      console.log("Speech model installed!");
+
+      // Switch to main UI
+      installPage.style.display = "none";
+      mainPage.style.display = "block";
+
+    } catch (err) {
+      console.error("Installation failed:", err);
+    }
+
+  });
+
 });
-
-
-
-
-
-
-
-
-
-function startSpeechRecognition() {
-  startCommandListener();
-}
-
-// chrome.runtime.sendMessage({ type: "startSR" });
-startSpeechRecognition();
