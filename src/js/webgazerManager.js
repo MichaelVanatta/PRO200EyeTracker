@@ -3,6 +3,8 @@
 // console.log("Started js");
 
 window.addEventListener("load", async function () {
+    webgazer.params.faceMeshPath = chrome.runtime.getURL("./mediapipe/");
+
     await webgazer
         .setRegression('ridge')
         .begin();

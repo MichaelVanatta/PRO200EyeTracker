@@ -16,3 +16,59 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     }
   }
 });
+
+window.addEventListener("load", async () => {
+
+    webgazer.params.faceMeshPath =
+        chrome.runtime.getURL("webgazer/mediapipe/");
+
+    window.locateFile = function(file) {
+      return chrome.runtime.getURL("webgazer/mediapipe/") + file;
+    };
+
+    await webgazer
+        .setRegression("ridge")
+        .begin();
+
+    webgazer.showPredictionPoints(true);
+    webgazer.showVideoPreview(true);
+    webgazer.showFaceOverlay(true);
+    webgazer.showFaceFeedbackBox(true);
+
+    webgazer.setGazeListener((data) => {
+        if (!data) return;
+
+        console.log("Gaze:", data.x, data.y);
+    });
+});
+
+// (async function () {
+
+//     if (window.webgazer) return;
+
+//     const script = document.createElement("script");
+//     script.src = chrome.runtime.getURL("webgazer/webgazer.js");
+//     document.head.appendChild(script);
+
+//     script.onload = async () => {
+
+//         webgazer.params.faceMeshPath =
+//             chrome.runtime.getURL("webgazer/mediapipe/");
+
+//         await webgazer
+//             .setRegression("ridge")
+//             .begin();
+
+//         webgazer.showPredictionPoints(true);
+
+//         webgazer.setGazeListener((data) => {
+//             if (!data) return;
+
+//             var x = data.x;
+//             var y = data.y;
+
+//             var element = document.elementFromPoint(x,y);
+//             console.log("Gaze:", element);
+//         });
+//     };
+// })();
