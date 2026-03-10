@@ -105,7 +105,33 @@ input:checked + .slider::before {
 }
 
 #eyeSetting,
-#voiceSetting {
+#voiceSetting, #installer {
   display: block;
   margin: 12px auto 0 auto;  /* centers horizontally */
+}
+
+#mainPage {
+  display: none;
+}
+
+#webgazerVideoFeed {
+  position: fixed !important;
+  bottom: 10px;
+  right: 10px;
+  width: 120px !important;
+  height: auto !important;
+  z-index: 999;
+}
+
+#webgazerFaceOverlay,
+#webgazerFaceFeedbackBox,
+#webgazerGazeDot {
+  z-index: 998;
+}
+
+#webgazerVideoFeed,
+#webgazerFaceOverlay,
+#webgazerFaceFeedbackBox,
+#webgazerGazeDot {
+  pointer-events: none !important;
 }
