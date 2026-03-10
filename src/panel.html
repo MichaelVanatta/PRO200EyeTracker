@@ -7,14 +7,22 @@
 
     <link rel="stylesheet" href="../assets/styles/css/default.css">
 
+    <script src="panel.js" type="module" defer></script>
+
     <script src="js/webgazer.js"></script>
-    <!-- <script src="js/webgazerManager.js"></script> -->
-    
+<!--     <script src="js/webgazerManager.js"></script> -->
+
     <title>Accessible Web Panel</title>
 </head>
 
 <body>
     <h1>Accessible Web</h1>
+    <div id="installPage">
+        <h2>Voice Recognition Required</h2>
+        <p>This extension requires a local speech recognition model.</p>
+        <button id="installer">Install Voice Recognition</button>
+    </div>
+
     <div id="mainPage">
         <div class="toggle-container">
 
@@ -22,7 +30,7 @@
                 <span class="toggle-label">Toggle Eyetracking</span>
 
                 <label class="switch">
-                    <input type="checkbox" id="eyeToggle">
+                    <input type="checkbox" id="eyeToggle" checked>
                     <span class="slider"></span>
                 </label>
             </div>
@@ -34,7 +42,7 @@
             <div class="toggle-row">
                 <span class="toggle-label">Toggle Voicetracking</span>
                 <label class="switch">
-                    <input type="checkbox" id="voiceToggle">
+                    <input type="checkbox" id="voiceToggle" checked>
                     <span class="slider"></span>
                 </label>
             </div>
@@ -55,8 +63,6 @@
         <h2>Voice Tracking Settings</h2>
         <p>Put options here</p>
     </div>
-
-    <button id="installer">Install Needed Files Here</button>
 </body>
 
 </html>
