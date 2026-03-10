@@ -9,7 +9,8 @@
   },
   "content_scripts": [
     {
-      "js": ["content.js"],
+      "js": ["content.js",
+             "js/webgazer.js"],
       "matches": ["<all_urls>"]
     }
   ],
@@ -20,11 +21,14 @@
     "service_worker": "background.js",
     "type": "module"
   },
-  "permissions": ["offscreen", "tabs", "activeTab", "scripting"],
+  "permissions": ["offscreen", "tabs", "activeTab", "scripting", "camera"],
   "host_permissions": ["<all_urls>"],
   "web_accessible_resources": [
     {
-      "resources": [],
+      "resources": [
+	"mediapipe/*",
+	"mediapipe/face_mesh/*"
+       ],
       "matches": ["<all_urls>"]
     }
   ]
