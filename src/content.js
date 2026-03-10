@@ -27,6 +27,15 @@ function startDictationRecognizer() {
       hasRun = true;
       recognition.stop();
       console.log(transcript);
+
+      const input = document.activeElement;
+      if (input && input.matches("input, textarea")) {
+        input.value = transcript;
+      }
+      else if (input.shadowRoot && input.shadowRoot.matches("input, textarea")) {
+        input.value = transcript;
+      }
+
       setTimeout(() => {
         startCommandListener();
       }, 5e3);
