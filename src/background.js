@@ -20,6 +20,51 @@
 //   }
 // });
 
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+let recognition = null;
+let recognitionEnabled = false;
+
+function startRecognition() {
+
+  if (recognition) return;
+
+  recognition = new SpeechRecognition();
+  recognition.lang = "en-US";
+  recognition.continuous = true;
+
+  recognition.onresult = (event) => {
+
+    const transcript =
+      event.results[event.results.length - 1][0].transcript;
+
+    console.log("Heard:", transcript);
+
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+
+      if (!tabs.length) return;
+
+      chrome.tabs.sendMessage(tabs[0].id, {
+        type: "dictationTranscript",
+        data: transcript
+      });
+
+    });
+
+  };
+
+  recognition.start();
+}
+
+function stopRecognition() {
+
+  if (recognition) {
+    recognition.stop();
+    recognition = null;
+  }
+
+}
+
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (msg.type === "dictationTranscript") {
     console.log("received:", msg.data);
@@ -49,4 +94,19 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       type: "dictationFinished"
     });
   }
+});
+
+
+chrome.runtime.onMessage.addListener((msg) => {
+
+  if (msg.type === "startVoice") {
+    console.log("Voice start requested");
+    startRecognition();
+  }
+
+  if (msg.type === "stopVoice") {
+    console.log("Voice stop requested");
+    stopRecognition();
+  }
+
 });

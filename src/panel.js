@@ -62,15 +62,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   voiceToggle.addEventListener("change", () => {
 
-    if (voiceToggle.checked) {
-      console.log("Voice recognition ON");
-      startCommandListener();
-    } else {
-      console.log("Voice recognition OFF");
-      recognition.stop();
-    }
+  if (voiceToggle.checked) {
+    chrome.runtime.sendMessage({ type: "startVoice" });
+  } else {
+    chrome.runtime.sendMessage({ type: "stopVoice" });
+  }
 
-  });
+});
 
 
   if (voiceToggle.checked) {

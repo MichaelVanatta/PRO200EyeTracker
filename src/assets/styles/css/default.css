@@ -128,10 +128,3 @@ input:checked + .slider::before {
 #webgazerGazeDot {
   z-index: 998;
 }
-
-#webgazerVideoFeed,
-#webgazerFaceOverlay,
-#webgazerFaceFeedbackBox,
-#webgazerGazeDot {
-  pointer-events: none !important;
-}
