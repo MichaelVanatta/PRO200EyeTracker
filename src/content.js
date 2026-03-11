@@ -28,16 +28,21 @@ function startDictationRecognizer() {
       recognition.stop();
       console.log(transcript);
 
-      const input = document.activeElement;
-      console.log(document.activeElement);
-      if (input && input.matches("input, textarea")) {
-        input.value = transcript;
-      }
-      else if (input.shadowRoot) {
-        console.log(input.shadowRoot);
-        if (shadowInput) {
-          shadowInput.value = transcript;
+      // Was taught the nature of shadow root/host by ChatGPT
+      // Read more on the Shadow DOM from https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_shadow_DOM
+      let input = document.activeElement;
+
+      while (input) {
+        if (input.shadowRoot && input.shadowRoot.activeElement) {
+          input = input.shadowRoot.activeElement;
         }
+        else {
+          break;
+        }
+      }
+
+      if (input && input.matches("input")) {
+        input.value = transcript;
       }
 
       setTimeout(() => {
