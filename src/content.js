@@ -126,7 +126,7 @@ function startCommandListener() {
 navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => console.log("Mic working")).catch((err) => console.error(err));
 
 startCommandListener();
-});
+// });
 
 window.addEventListener("load", async () => {
 

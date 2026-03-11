@@ -1,3 +1,4 @@
+//This file is depricated and needs to be integrated into the background.js
 import { startDictationRecognizer } from './dictationrecognizer.js';
 
 // const phraseData = [
@@ -13,6 +14,8 @@ import { startDictationRecognizer } from './dictationrecognizer.js';
 
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 let recognition = new SpeechRecognition();
+
+let voiceEnabled = true;
 
 const commands = [
   "type",
@@ -69,39 +72,32 @@ function initialize() { // Acts as settings for right now
 }
 
 export function startCommandListener() {
+  if (!voiceEnabled) return;
+
   initialize();
-
-  // recognition.phrases = phrases;
-
-  recognition.onnomatch = () => {
-    console.log("This sucks");
-  };
 
   recognition.onresult = (event) => {
     let word = event.results[event.resultIndex][0].transcript.toLowerCase().trim();
 
     if (commands.includes(word)) {
       recognition.stop();
-      console.log(word, "this is a command");
       runCommand(word);
-    }
-    else {
-      console.log(word, "this is not a command");
     }
   };
 
   recognition.onerror = (error) => {
     console.error(error.error);
-    if (error.error === "no-speech") {
-      startCommandListener();
+
+    if (error.error === "no-speech" && voiceEnabled) {
+      startCommandListener(); // only restart if enabled
     }
   };
 
   recognition.start();
 }
 
-chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
-  if (msg.type === "dictationFinished") {
+chrome.runtime.onMessage.addListener((msg) => {
+  if (msg.type === "dictationFinished" && voiceEnabled) {
     setTimeout(() => {
       startCommandListener();
     }, 5000);
@@ -113,3 +109,21 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 navigator.mediaDevices.getUserMedia({ audio: true })
   .then(stream => console.log("Mic working"))
   .catch(err => console.error(err));
+
+  export function enableVoice() {
+  if (voiceEnabled) return;
+
+  voiceEnabled = true;
+  startCommandListener();
+}
+
+export function disableVoice() {
+  voiceEnabled = false;
+
+  if (recognition) {
+    recognition.onend = null;
+    recognition.stop();
+  }
+
+  console.log("Voice recognition disabled");
+}

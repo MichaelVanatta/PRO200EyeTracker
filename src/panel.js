@@ -1,4 +1,5 @@
-import { startCommandListener } from "./commandlistener.js";
+import { startCommandListener, enableVoice, disableVoice } from "./commandlistener.js";
+
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -42,8 +43,6 @@ document.addEventListener("DOMContentLoaded", () => {
         installerButton.style.display = "none";
         recognition.stop();
       };
-
-      startCommandListener();
     }
   });
 
@@ -59,36 +58,35 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
   });
-
-  voiceToggle.addEventListener("change", () => {
-
-    if (voiceToggle.checked) {
-      console.log("Voice recognition ON");
-      startCommandListener();
-    } else {
-      console.log("Voice recognition OFF");
-      recognition.stop();
-    }
-
-  });
-
-
-  if (voiceToggle.checked) {
-    startCommandListener();
+  
+voiceToggle.addEventListener("change", (e) => {
+  if (e.target.checked) {
+    console.log("Voice recognition ON");
+    enableVoice();
+  } else {
+    console.log("Voice recognition OFF");
+    disableVoice();
   }
-
+});
 
 
   // If API doesn't exist, hide the installer entirely
-  if (!SpeechRecognition) {
-    mainPage.style.display = "none";
-    installPage.style.display = "block";
-    return;
+if (!SpeechRecognition) {
+  mainPage.style.display = "none";
+  installPage.style.display = "block";
+  return;
+} else {
+  installPage.style.display = "none";
+  mainPage.style.display = "block";
+
+  // Sync voice system with toggle state
+  if (voiceToggle.checked) {
+    console.log("Voice recognition ON (startup)");
+    enableVoice();
   } else {
-    installPage.style.display = "none";
-    mainPage.style.display = "block";
+    disableVoice();
   }
-  startCommandListener();
+}
 
   document.querySelectorAll(".backBtn").forEach(btn => {
     btn.addEventListener("click", () => {
