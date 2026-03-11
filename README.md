@@ -23,6 +23,17 @@
     ![image](readme-resources/menu.png)
     - Click the big green `Install Needed Files Here` button, and you're golden.
 
+#### Using the Extension
+- It starts running by default.
+- There are several spoken commands for operating the application
+    - Click | Select - Select the element that the eye tracking pointer is currently above.
+    - Dictate | Write - Record the user's voice until they stop talking, and place the transcript in a selected text field
+    - Stop | Kill | Die - shuts down the process and kills the currently running process
+
+- There is a menu for controlling application settings. The majority of the settings were cut for time, so it is just an on/off switch for voice recognition and eye tracking separately, the switch can be used to reset the application without restarting the extension.
+- There is also a manual control for downloading the language packs for voice recognition if they are not already installed.
+- The eye tracker position is indicated by a dot. The dot will select whatever element is at the dot's position when the select command is spoken, if it is selectable.
+
 ## For Developers
 #### Tech Stack
 - We are making a Manifest V3 Chrome Extension
