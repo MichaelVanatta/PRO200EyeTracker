@@ -29,11 +29,15 @@ function startDictationRecognizer() {
       console.log(transcript);
 
       const input = document.activeElement;
+      console.log(document.activeElement);
       if (input && input.matches("input, textarea")) {
         input.value = transcript;
       }
-      else if (input.shadowRoot && input.shadowRoot.matches("input, textarea")) {
-        input.value = transcript;
+      else if (input.shadowRoot) {
+        console.log(input.shadowRoot);
+        if (shadowInput) {
+          shadowInput.value = transcript;
+        }
       }
 
       setTimeout(() => {
