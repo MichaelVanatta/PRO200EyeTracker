@@ -1,5 +1,3 @@
-import { startCommandListener } from "./commandlistener.js";
-
 document.addEventListener("DOMContentLoaded", () => {
 
   const mainPage = document.getElementById("mainPage");
@@ -10,8 +8,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const installerButton = document.getElementById("installer");
   const installPage = document.getElementById("installPage");
 
-  const SpeechRecognition =
-    window.SpeechRecognition || window.webkitSpeechRecognition;
+  // const SpeechRecognition =
+  //   window.SpeechRecognition || window.webkitSpeechRecognition;
 
   document.getElementById("eyeSetting").addEventListener("click", () => {
     mainPage.style.display = "none";
@@ -24,10 +22,10 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   document.getElementById("installer").addEventListener("click", () => {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    // const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
     if (SpeechRecognition) {
-      const recognition = new SpeechRecognition();
+      // const recognition = new SpeechRecognition();
       recognition.processLocally = true;
 
       recognition.onerror = (event) => {
@@ -43,7 +41,6 @@ document.addEventListener("DOMContentLoaded", () => {
         recognition.stop();
       };
 
-      startCommandListener();
     }
   });
 
@@ -71,22 +68,41 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-  if (voiceToggle.checked) {
-    startCommandListener();
-  }
-
 
 
   // If API doesn't exist, hide the installer entirely
+async function checkSpeechModel() {
+
   if (!SpeechRecognition) {
     mainPage.style.display = "none";
     installPage.style.display = "block";
     return;
-  } else {
-    installPage.style.display = "none";
-    mainPage.style.display = "block";
   }
-  startCommandListener();
+
+  try {
+
+    const result = await SpeechRecognition.available({
+      langs: ["en-US"],
+      processLocally: true
+    });
+
+    if (result === "available") {
+      installPage.style.display = "none";
+      mainPage.style.display = "block";
+    } else {
+      mainPage.style.display = "none";
+      installPage.style.display = "block";
+    }
+
+  } catch (err) {
+    console.error("Speech check failed:", err);
+    mainPage.style.display = "none";
+    installPage.style.display = "block";
+  }
+
+}
+
+checkSpeechModel();
 
   document.querySelectorAll(".backBtn").forEach(btn => {
     btn.addEventListener("click", () => {
@@ -99,8 +115,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   installerButton.addEventListener("click", async () => {
 
-    const SpeechRecognition =
-      window.SpeechRecognition || window.webkitSpeechRecognition;
+    // const SpeechRecognition =
+    //   window.SpeechRecognition || window.webkitSpeechRecognition;
 
     if (!SpeechRecognition) {
       alert("Speech recognition not supported in this browser.");

@@ -1,112 +1,46 @@
-// let exists = [];
+console.log("BACKGROUND WORKER STARTED");
 
-// browser.runtime.onMessage.addListener(async (msg, sender, sendResponse) => {
-//   if (msg.type === "startSR") {
-//     exists = await browser.runtime.getContexts({
-//       documentUrls: [browser.runtime.getURL("offscreen.html")],
-//       contextTypes: ["OFFSCREEN_DOCUMENT"],
-//     });
+async function ensureOffscreen() {
 
-//     if (exists.length === 0) {
-//       await browser.offscreen.createDocument({
-//         url: browser.runtime.getURL("offscreen.html"),
-//         reasons: ["USER_MEDIA"],
-//         justification: "Run speech recognition",
-//       });
-//       await new Promise((r) => setTimeout(r, 10000));
-//     }
+  const contexts = await chrome.runtime.getContexts({
+    contextTypes: ["OFFSCREEN_DOCUMENT"],
+    documentUrls: [chrome.runtime.getURL("offscreen.html")]
+  });
 
-//     browser.runtime.sendMessage({ type: "startSR" });
-//   }
-// });
+  if (contexts.length > 0) return;
 
-const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  console.log("Creating offscreen document");
 
-let recognition = null;
-let recognitionEnabled = false;
-
-function startRecognition() {
-
-  if (recognition) return;
-
-  recognition = new SpeechRecognition();
-  recognition.lang = "en-US";
-  recognition.continuous = true;
-
-  recognition.onresult = (event) => {
-
-    const transcript =
-      event.results[event.results.length - 1][0].transcript;
-
-    console.log("Heard:", transcript);
-
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-
-      if (!tabs.length) return;
-
-      chrome.tabs.sendMessage(tabs[0].id, {
-        type: "dictationTranscript",
-        data: transcript
-      });
-
-    });
-
-  };
-
-  recognition.start();
-}
-
-function stopRecognition() {
-
-  if (recognition) {
-    recognition.stop();
-    recognition = null;
-  }
+  await chrome.offscreen.createDocument({
+    url: "offscreen.html",
+    reasons: ["USER_MEDIA"],
+    justification: "Run speech recognition"
+  });
 
 }
 
-chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
-  if (msg.type === "dictationTranscript") {
-    console.log("received:", msg.data);
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    if (!tabs.length) return;
-
-    const tabId = tabs[0].id;
-
-    chrome.tabs.sendMessage(tabId, {
-        type: "dictationTranscript",
-        data: msg.data
-      },
-      (response) => {
-        if (chrome.runtime.lastError) {
-          console.error("Send failed:", chrome.runtime.lastError.message);
-        } else {
-          console.log("Message sent successfully");
-        }
-      });
-    });
-  }
-});
-
-chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
-  if (msg.type === "dictationFinished") {
-    chrome.runtime.sendMessage({
-      type: "dictationFinished"
-    });
-  }
-});
-
-
-chrome.runtime.onMessage.addListener((msg) => {
+chrome.runtime.onMessage.addListener(async (msg) => {
 
   if (msg.type === "startVoice") {
+
     console.log("Voice start requested");
-    startRecognition();
+
+    await ensureOffscreen();
+
+    chrome.runtime.sendMessage({
+      type: "startRecognition"
+    });
+
   }
 
   if (msg.type === "stopVoice") {
+
     console.log("Voice stop requested");
-    stopRecognition();
+
+    chrome.runtime.sendMessage({
+      type: "stopRecognition"
+    });
+
   }
 
 });

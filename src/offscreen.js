@@ -1,34 +1,65 @@
-const phraseData = [
-  { phrase: "click", boost: 5.0 },
-  { phrase: "select", boost: 5.0 },
-  { phrase: "type", boost: 5.0 },
-  { phrase: "write", boost: 5.0 },
-];
+console.log("OFFSCREEN PAGE LOADED");
 
-const phrases = phraseData.map(
-  (p) => new webkitSpeechRecognitionPhrase(p.phrase, p.boost),
-);
+// const SpeechRecognition =
+//   window.SpeechRecognition || window.webkitSpeechRecognition;
 
-chrome.runtime.onMessage.addListener(async (msg) => {
-  if (msg.type === "startSR") {
-    const recognition = new webkitSpeechRecognition();
+let recognition = null;
 
-    recognition.continuous = true;
-    recognition.interimResults = true;
-    recognition.maxAlternatives = 1;
-    recognition.processLocally = true;
-    recognition.phrases = phraseObjects;
+function startRecognition() {
 
-    recognition.onstart = () => {
-      console.log("it go");
-    };
+  if (recognition) return;
 
-    recognition.onresult = (e) => {
-      console.log("Transcript:", e.results[0][0].transcript);
-    };
+  console.log("Starting recognition");
 
-    recognition.start();
+  // recognition = new SpeechRecognition();
+  recognition.lang = "en-US";
+  recognition.continuous = true;
+  recognition.interimResults = false;
 
-    console.log(recognition);
+  recognition.onresult = (event) => {
+
+    const transcript =
+      event.results[event.results.length - 1][0].transcript;
+
+    console.log("Heard:", transcript);
+
+    chrome.runtime.sendMessage({
+      type: "dictationTranscript",
+      data: transcript
+    });
+
+  };
+
+  recognition.onerror = (e) => {
+    console.error("Speech error:", e.error);
+  };
+
+  recognition.onend = () => {
+    console.log("Recognition stopped");
+    recognition = null;
+  };
+
+  recognition.start();
+}
+
+function stopRecognition() {
+
+  if (!recognition) return;
+
+  console.log("Stopping recognition");
+
+  recognition.stop();
+  recognition = null;
+}
+
+chrome.runtime.onMessage.addListener((msg) => {
+
+  if (msg.type === "startRecognition") {
+    startRecognition();
   }
+
+  if (msg.type === "stopRecognition") {
+    stopRecognition();
+  }
+
 });
