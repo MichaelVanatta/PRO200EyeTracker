@@ -1,129 +1,133 @@
-//This file is depricated and needs to be integrated into the background.js
-import { startDictationRecognizer } from './dictationrecognizer.js';
+// //This file is depricated and needs to be integrated into the background.js
+// import { startDictationRecognizer } from './dictationrecognizer.js';
 
-// const phraseData = [
-//   { phrase: "click", boost: 5.0 },
-//   { phrase: "select", boost: 5.0 },
-//   { phrase: "type", boost: 5.0 },
-//   { phrase: "write", boost: 5.0 },
+// // const phraseData = [
+// //   { phrase: "click", boost: 5.0 },
+// //   { phrase: "select", boost: 5.0 },
+// //   { phrase: "type", boost: 5.0 },
+// //   { phrase: "write", boost: 5.0 },
+// // ];
+
+// // const phrases = phraseData.map(
+// //   (p) => new window.webkitSpeechRecognitionPhrase(p.phrase, p.boost),
+// // );
+
+// const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+// let recognition = new SpeechRecognition();
+
+// let voiceEnabled = false;
+
+// const commands = [
+//   "type",
+//   "dictate",
+//   "write",
+//   "right",
+//   "click",
+//   "clique",
+//   "select",
+//   "reset",
+//   "restart",
+//   "stop",
+//   "kill",
 // ];
 
-// const phrases = phraseData.map(
-//   (p) => new window.webkitSpeechRecognitionPhrase(p.phrase, p.boost),
-// );
+// async function runCommand(command) {
+//  switch(command) {
+//   case "click":
+//   case "clique":
+//   case "select":
+//     break;
+//   case "dictate":
+//   case "write":
+//   case "right":
+//   startDictationRecognizer();
+//     break;
+//   case "reset":
+//   case "restart":
+//     break;
+//   case "stop":
+//   case "kill":
+//     recognition.stop();
+//     break;
+//   default:
+//     console.log("False alarm");
+//     break;
+//  }
+// }
 
-const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-let recognition = new SpeechRecognition();
+// function initialize() { // Acts as settings for right now
+//   recognition = new SpeechRecognition();
 
-let voiceEnabled = true;
+//   recognition.continuous = true;
+//   recognition.interimResults = true;
+//   recognition.maxAlternatives = 1;
+//   recognition.processLocally = true;
+//   recognition.lang = "en-US";
 
-const commands = [
-  "type",
-  "dictate",
-  "write",
-  "right",
-  "click",
-  "clique",
-  "select",
-  "reset",
-  "restart",
-  "stop",
-  "kill",
-];
+//   console.log(recognition);
 
-async function runCommand(command) {
- switch(command) {
-  case "click":
-  case "clique":
-  case "select":
-    break;
-  case "dictate":
-  case "write":
-  case "right":
-  startDictationRecognizer();
-    break;
-  case "reset":
-  case "restart":
-    break;
-  case "stop":
-  case "kill":
-    recognition.stop();
-    break;
-  default:
-    console.log("False alarm");
-    break;
- }
-}
+//   recognition.onstart = () => {
+//     console.log("Starting command listener");
+//   };
+// }
 
-function initialize() { // Acts as settings for right now
-  recognition = new SpeechRecognition();
+// export function startCommandListener() {
+//   if (!voiceEnabled) return;
 
-  recognition.continuous = true;
-  recognition.interimResults = true;
-  recognition.maxAlternatives = 1;
-  recognition.processLocally = true;
-  recognition.lang = "en-US";
+//   initialize();
 
-  console.log(recognition);
+// recognition.onresult = (event) => {
+//   let word = event.results[event.resultIndex][0].transcript
+//     .toLowerCase()
+//     .trim();
 
-  recognition.onstart = () => {
-    console.log("Starting command listener");
-  };
-}
+//   if (commands.includes(word)) {
+//     recognition.stop();
+//     console.log(word, "this is a command");
+//     runCommand(word);
+//   } else {
+//     console.log(word, "this is not a command");
+//   }
+// };
 
-export function startCommandListener() {
-  if (!voiceEnabled) return;
+//   recognition.onerror = (error) => {
+//     console.error(error.error);
 
-  initialize();
+//     if (error.error === "no-speech" && voiceEnabled) {
+//       enableVoice(); // startCommandListener(); // only restart if enabled
+//     }
+//   };
 
-  recognition.onresult = (event) => {
-    let word = event.results[event.resultIndex][0].transcript.toLowerCase().trim();
+//   recognition.start();
+// }
 
-    if (commands.includes(word)) {
-      recognition.stop();
-      runCommand(word);
-    }
-  };
+// chrome.runtime.onMessage.addListener((msg) => {
+//   if (msg.type === "dictationFinished" && voiceEnabled) {
+//     setTimeout(() => {
+//       enableVoice(); // startCommandListener();
+//     }, 5000);
+//   }
+// });
 
-  recognition.onerror = (error) => {
-    console.error(error.error);
+// // check chrome://settings/content/microphone for the boys with the no-speech error
 
-    if (error.error === "no-speech" && voiceEnabled) {
-      startCommandListener(); // only restart if enabled
-    }
-  };
+// navigator.mediaDevices.getUserMedia({ audio: true })
+//   .then(stream => console.log("Mic working"))
+//   .catch(err => console.error(err));
 
-  recognition.start();
-}
+// export function enableVoice() {
+//   if (voiceEnabled) return;
 
-chrome.runtime.onMessage.addListener((msg) => {
-  if (msg.type === "dictationFinished" && voiceEnabled) {
-    setTimeout(() => {
-      startCommandListener();
-    }, 5000);
-  }
-});
+//   voiceEnabled = true;
+//   startCommandListener();
+// }
 
-// check chrome://settings/content/microphone for the boys with the no-speech error
+// export function disableVoice() {
+//   voiceEnabled = false;
 
-navigator.mediaDevices.getUserMedia({ audio: true })
-  .then(stream => console.log("Mic working"))
-  .catch(err => console.error(err));
+//   if (recognition2) {
+//     recognition2.stop();
+//   }
+//     console.log("Voice recognition disabled");
+// }
 
-  export function enableVoice() {
-  if (voiceEnabled) return;
-
-  voiceEnabled = true;
-  startCommandListener();
-}
-
-export function disableVoice() {
-  voiceEnabled = false;
-
-  if (recognition) {
-    recognition.onend = null;
-    recognition.stop();
-  }
-
-  console.log("Voice recognition disabled");
-}

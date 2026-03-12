@@ -1,42 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <link rel="stylesheet" href="../assets/styles/css/default.css">
-
-    <script src="panel.js" type="module" defer></script>
-
+    <script src="panel.js" defer></script>
     <script src="js/webgazer.js"></script>
-<!--     <script src="js/webgazerManager.js"></script> -->
-
     <title>Accessible Web Panel</title>
 </head>
-
 <body>
     <h1>Accessible Web</h1>
-    <div id="installPage">
+    <div id="installPage" style="display:none;">
         <h2>Voice Recognition Required</h2>
         <p>This extension requires a local speech recognition model.</p>
         <button id="installer">Install Voice Recognition</button>
     </div>
-
     <div id="mainPage">
         <div class="toggle-container">
-
             <div class="toggle-row">
                 <span class="toggle-label">Toggle Eyetracking</span>
-
                 <label class="switch">
                     <input type="checkbox" id="eyeToggle" checked>
                     <span class="slider"></span>
                 </label>
             </div>
-
             <button id="eyeSetting">Eye Tracking Settings</button>
-
         </div>
         <div class="toggle-container">
             <div class="toggle-row">
@@ -49,20 +37,13 @@
             <button id="voiceSetting">Voice Tracker Settings</button>
         </div>
     </div>
-    <!-- EYE SETTINGS PAGE -->
-    <div id="eyePage" style="display: none;">
+    <div id="eyePage" style="display:none;">
         <button class="backBtn">← Back</button>
-        <h2>Eye Tracking Settings</h2>
-        <p>Put sliders / options here</p>
+        <h2>Eye Tracking Settings</h2>  
     </div>
-
-
-    <!-- VOICE SETTINGS PAGE -->
-    <div id="voicePage" style="display: none;">
+    <div id="voicePage" style="display:none;">
         <button class="backBtn">← Back</button>
         <h2>Voice Tracking Settings</h2>
-        <p>Put options here</p>
     </div>
 </body>
-
 </html>

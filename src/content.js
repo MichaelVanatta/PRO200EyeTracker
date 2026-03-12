@@ -1,48 +1,37 @@
+if (typeof window.__contentScriptInjected === "undefined") {
+window.__contentScriptInjected = true;
+
 // src/dictationrecognizer.js
 var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 var recognition = new SpeechRecognition();
 var isActive = false;
+
 function initialize() {
   recognition = new SpeechRecognition();
   recognition.continuous = true;
   recognition.interimResults = false;
   recognition.maxAlternatives = 1;
-  recognition.processLocally = true;
-  console.log(recognition);
   recognition.onstart = () => {
     console.log("Starting dictation...");
     isActive = true;
   };
 }
+
 function startDictationRecognizer() {
-  let hasRun = false;
   if (!isActive) {
     initialize();
-    recognition.onnomatch = () => {
-      console.log("This sucks");
-    };
     recognition.onresult = (event) => {
       let transcript = event.results[0][0].transcript;
       isActive = false;
-      hasRun = true;
       recognition.stop();
       console.log(transcript);
-
       const input = document.activeElement;
       if (input && input.matches("input, textarea")) {
         input.value = transcript;
       }
-      else if (input.shadowRoot && input.shadowRoot.matches("input, textarea")) {
-        input.value = transcript;
-      }
-
-      setTimeout(() => {
-        startCommandListener();
-      }, 5e3);
+      setTimeout(() => { enableVoice(); }, 5000);
     };
-    recognition.onerror = (error) => {
-      console.error(error.error);
-    };
+    recognition.onerror = (error) => { console.error(error.error); };
     recognition.start();
   }
 }
@@ -50,136 +39,71 @@ function startDictationRecognizer() {
 // src/commandlistener.js
 var SpeechRecognition2 = window.SpeechRecognition || window.webkitSpeechRecognition;
 var recognition2 = new SpeechRecognition2();
-var commands = [
-  "type",
-  "dictate",
-  "write",
-  "right",
-  "click",
-  "clique",
-  "select",
-  "reset",
-  "restart",
-  "stop",
-  "kill",
-  "die"
-];
+var commands = ["type","dictate","write","right","click","clique","select","reset","restart","stop","kill","die"];
+
 async function runCommand(command) {
   switch (command) {
-    case "click":
-    case "clique":
-    case "select":
-      break;
-    case "dictate":
-    case "write":
-    case "right":
+    case "dictate": case "write": case "right":
       startDictationRecognizer();
       break;
-    case "reset":
-    case "restart":
-      break;
-    case "stop":
-    case "kill":
-    case "die":
-      recognition2.stop();
+    case "stop": case "kill": case "die":
+      disableVoice();
       break;
     default:
-      console.log("False alarm");
-      break;
+      console.log("Unknown command:", command);
   }
 }
+
 function initialize2() {
   recognition2 = new SpeechRecognition2();
   recognition2.continuous = true;
   recognition2.interimResults = true;
   recognition2.maxAlternatives = 1;
-  recognition2.processLocally = true;
   recognition2.lang = "en-US";
-  console.log(recognition2);
-  recognition2.onstart = () => {
-    console.log("Starting command listener");
-  };
+  recognition2.onstart = () => { console.log("Command listener started"); };
 }
+
 function startCommandListener() {
   initialize2();
-  recognition2.onnomatch = () => {
-    console.log("This sucks");
-  };
   recognition2.onresult = (event) => {
     let word = event.results[event.resultIndex][0].transcript.toLowerCase().trim();
     if (commands.includes(word)) {
       recognition2.stop();
-      console.log(word, "this is a command");
+      console.log("Command:", word);
       runCommand(word);
-    } else {
-      console.log(word, "this is not a command");
     }
   };
   recognition2.onerror = (error) => {
     console.error(error.error);
-    if (error.error === "no-speech") {
+    if (error.error === "no-speech" && voiceRunning) {
       startCommandListener();
     }
   };
   recognition2.start();
 }
-navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => console.log("Mic working")).catch((err) => console.error(err));
 
-startCommandListener();
-// });
+var voiceRunning = false;
 
-window.addEventListener("load", async () => {
+function enableVoice() {
+  if (voiceRunning) return;
+  voiceRunning = true;
+  startCommandListener();
+}
 
-    webgazer.params.faceMeshPath =
-        chrome.runtime.getURL("webgazer/mediapipe/");
+function disableVoice() {
+  voiceRunning = false;
+  try { recognition2.stop(); } catch (e) {}
+}
 
-    window.locateFile = function(file) {
-      return chrome.runtime.getURL("webgazer/mediapipe/") + file;
-    };
-
-    await webgazer
-        .setRegression("ridge")
-        .begin();
-
-    webgazer.showPredictionPoints(true);
-    webgazer.showVideoPreview(true);
-    webgazer.showFaceOverlay(true);
-    webgazer.showFaceFeedbackBox(true);
-
-    webgazer.setGazeListener((data) => {
-        if (!data) return;
-
-        console.log("Gaze:", data.x, data.y);
-    });
+chrome.runtime.onMessage.addListener((msg) => {
+  if (msg.type === "START_VOICE") {
+    console.log("Voice ON");
+    enableVoice();
+  }
+  if (msg.type === "STOP_VOICE") {
+    console.log("Voice OFF");
+    disableVoice();
+  }
 });
 
-// (async function () {
-
-//     if (window.webgazer) return;
-
-//     const script = document.createElement("script");
-//     script.src = chrome.runtime.getURL("webgazer/webgazer.js");
-//     document.head.appendChild(script);
-
-//     script.onload = async () => {
-
-//         webgazer.params.faceMeshPath =
-//             chrome.runtime.getURL("webgazer/mediapipe/");
-
-//         await webgazer
-//             .setRegression("ridge")
-//             .begin();
-
-//         webgazer.showPredictionPoints(true);
-
-//         webgazer.setGazeListener((data) => {
-//             if (!data) return;
-
-//             var x = data.x;
-//             var y = data.y;
-
-//             var element = document.elementFromPoint(x,y);
-//             console.log("Gaze:", element);
-//         });
-//     };
-// })();
+} // end injection guard
