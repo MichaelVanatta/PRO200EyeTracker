@@ -103,7 +103,6 @@ function initialize2() {
   recognition2.interimResults = true;
   recognition2.maxAlternatives = 1;
   recognition2.processLocally = true;
-  recognition2.lang = "en-US";
   console.log(recognition2);
   recognition2.onstart = () => {
     console.log("Starting command listener");
@@ -128,6 +127,12 @@ function startCommandListener() {
     console.error(error.error);
     if (error.error === "no-speech") {
       startCommandListener();
+    }
+    else if (error.error === "language-not-supported") {
+      console.log(error.error);
+      SpeechRecognition.install({
+        langs: ["en-US"]
+      });
     }
   };
   recognition2.start();

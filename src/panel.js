@@ -11,12 +11,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
   if (SpeechRecognition) {
-    if (SpeechRecognition.available({ langs: ["en-US"], processLocally: true })) {
+    //console.log(typeof(SpeechRecognition), SpeechRecognition);
+    if (SpeechRecognition.available && SpeechRecognition.available({ langs: ["en-US"], processLocally: true })) {
       installerButton.style.display = "none";
       mainPage.style.display = "block";
     }
     else {
       installerButton.style.display = "block";
+      mainPage.style.display = "block";
     }
   }
 
