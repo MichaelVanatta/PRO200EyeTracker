@@ -96,7 +96,7 @@ function calPointClick(node) {
         // canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
 
         // Calculate the accuracy
-        calcAccuracy();
+        //calcAccuracy();
     }
 }
 
@@ -115,7 +115,7 @@ function calcAccuracy() {
     //     console.log("Sweet Alert Running");
         webgazer.params.storingPoints = true; // start storing the prediction points
     
-        sleep(5000).then(() => {
+        setTimeout(() => { console.log("slept"); }, 5000).then(() => {
                 webgazer.params.storingPoints = false; // stop storing the prediction points
                 console.log("Stopped storing points");
                 // var past50 = webgazer.getStoredPoints(); // retrieve the stored points

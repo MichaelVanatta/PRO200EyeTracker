@@ -39,17 +39,19 @@
 - We are making a Manifest V3 Chrome Extension
 - We heavily rely on the Chrome API for message sending/handling, tabs, and storage.
 - The extension uses the built in WebKit Voice Recognition API supported by the majority of chromium-based browsers
-- We are using WebGazer.js to handle eye tracking
+- We are using WebGazer.js to handle eye tracking (Currently broken)
 
 #### Architecture
 ![image](readme-resources/AccessibleWebDiagram.drawio.png)
 
 #### Unit Tests
-- For unit testing we are using Jest and its experimental support for ECMAScript Modules.
-- To run the existing tests simply run ```npm test``` at the project's root directory (one above src, where package.json lives)
-- There are not many tests currently implemented, only the things that can be tested without breaking (Jest doesn't like WebKit Speech Recognition).
+- ~~For unit testing we are using Jest and its experimental support for ECMAScript Modules.~~
+- ~~To run the existing tests simply run ```npm test``` at the project's root directory (one above src, where package.json lives)~~
+- ~~There are not many tests currently implemented, only the things that can be tested without breaking (Jest doesn't like WebKit Speech Recognition).~~
+- DROPPED IN FAVOR OF MANUAL TESTING.
 
 #### Current issues
 - We are currently relying almost entirely on bundling our code into one big content script, and loading that into any page.
     The `dictationrecognizer.js` and `commandlistener.js` are effectively deprecated now, as we are now directly modifying the `content.js` instead.
     This comes with limitations, the extension cannot interact with any real browser elements and can only interact with DOM elements in the current page.
+- WebGazer is implemented in a similar way, through content script injection, where it is added to the DOM of the visited site when the content script loads. There are still issues with this that prevent functionality.
