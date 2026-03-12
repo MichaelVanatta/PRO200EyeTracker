@@ -55,3 +55,6 @@
     The `dictationrecognizer.js` and `commandlistener.js` are effectively deprecated now, as we are now directly modifying the `content.js` instead.
     This comes with limitations, the extension cannot interact with any real browser elements and can only interact with DOM elements in the current page.
 - WebGazer is implemented in a similar way, through content script injection, where it is added to the DOM of the visited site when the content script loads. There are still issues with this that prevent functionality.
+- The management menu has several issues, and enabling and disabling the eye tracker and speech recognition, along with the configuration options included in the panel, are not implemented.
+- There are issues with language packs, some browsers refuuse to install them or recognize them.
+- Some browsers don't recognize WebKit Speech Recognition's static methods.
