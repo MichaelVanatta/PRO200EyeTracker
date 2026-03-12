@@ -45,9 +45,9 @@
 ![image](readme-resources/AccessibleWebDiagram.drawio.png)
 
 #### Unit Tests
-~~- For unit testing we are using Jest and its experimental support for ECMAScript Modules.
+~~~- For unit testing we are using Jest and its experimental support for ECMAScript Modules.
 - To run the existing tests simply run ```npm test``` at the project's root directory (one above src, where package.json lives)
-- There are not many tests currently implemented, only the things that can be tested without breaking (Jest doesn't like WebKit Speech Recognition).~~
+- There are not many tests currently implemented, only the things that can be tested without breaking (Jest doesn't like WebKit Speech Recognition).~~~
 - DROPPED IN FAVOR OF MANUAL TESTING.
 
 #### Current issues
