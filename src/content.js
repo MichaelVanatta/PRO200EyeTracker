@@ -135,60 +135,20 @@ function startCommandListener() {
 navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => console.log("Mic working")).catch((err) => console.error(err));
 
 startCommandListener();
-});
 
-window.addEventListener("load", async () => {
+function injectScript(path) {
+  const tag = document.createElement("script");
+  tag.src = chrome.runtime.getURL(path);
+  tag.onload = () => tag.remove();
+  (document.head || document.documentElement).appendChild(tag);
+}
 
-    webgazer.params.faceMeshPath =
-        chrome.runtime.getURL("webgazer/mediapipe/");
+// injectScript("mediapipe/face_mesh/face_mesh.js");
+// injectScript("mediapipe/face_mesh/face_mesh_solution_packed_assets_loader.js");
+// injectScript("mediapipe/face_mesh/face_mesh_solution_simd_wasm_bin.js");
+// injectScript("mediapipe/face_mesh/face_mesh_solution_wasm_bin.js");
+// injectScript("face_mesh_init.js");
 
-    window.locateFile = function(file) {
-      return chrome.runtime.getURL("webgazer/mediapipe/") + file;
-    };
-
-    await webgazer
-        .setRegression("ridge")
-        .begin();
-
-    webgazer.showPredictionPoints(true);
-    webgazer.showVideoPreview(true);
-    webgazer.showFaceOverlay(true);
-    webgazer.showFaceFeedbackBox(true);
-
-    webgazer.setGazeListener((data) => {
-        if (!data) return;
-
-        console.log("Gaze:", data.x, data.y);
-    });
-});
-
-// (async function () {
-
-//     if (window.webgazer) return;
-
-//     const script = document.createElement("script");
-//     script.src = chrome.runtime.getURL("webgazer/webgazer.js");
-//     document.head.appendChild(script);
-
-//     script.onload = async () => {
-
-//         webgazer.params.faceMeshPath =
-//             chrome.runtime.getURL("webgazer/mediapipe/");
-
-//         await webgazer
-//             .setRegression("ridge")
-//             .begin();
-
-//         webgazer.showPredictionPoints(true);
-
-//         webgazer.setGazeListener((data) => {
-//             if (!data) return;
-
-//             var x = data.x;
-//             var y = data.y;
-
-//             var element = document.elementFromPoint(x,y);
-//             console.log("Gaze:", element);
-//         });
-//     };
-// })();
+injectScript("webgazer.js");
+injectScript("clmtrackr.js");
+injectScript("eyeTracker.js");

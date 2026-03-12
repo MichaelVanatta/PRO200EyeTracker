@@ -9,9 +9,9 @@
   },
   "content_scripts": [
     {
-      "js": ["content.js",
-             "js/webgazer.js"],
-      "matches": ["<all_urls>"]
+      "js": ["content.js"],
+      "matches": ["<all_urls>"],
+      "run_at": "document_idle"
     }
   ],
   "content_security_policy": {
@@ -21,14 +21,11 @@
     "service_worker": "background.js",
     "type": "module"
   },
-  "permissions": ["offscreen", "tabs", "activeTab", "scripting", "camera"],
+  "permissions": ["offscreen", "tabs", "activeTab", "scripting", "storage"],
   "host_permissions": ["<all_urls>"],
   "web_accessible_resources": [
     {
-      "resources": [
-	"mediapipe/*",
-	"mediapipe/face_mesh/*"
-       ],
+      "resources": ["eyeTracker.js", "webgazer.js", "clmtrackr.js", "face_mesh_init.js", "mediapipe/face_mesh/*"],
       "matches": ["<all_urls>"]
     }
   ]
