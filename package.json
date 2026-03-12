@@ -1,5 +1,13 @@
 {
   "dependencies": {
     "webgazer": "^3.5.3"
+  },
+  "devDependencies": {
+    "jest": "^30.3.0",
+    "jest-environment-jsdom": "^30.3.0"
+  },
+  "type": "module",
+  "scripts": {
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   }
 }
